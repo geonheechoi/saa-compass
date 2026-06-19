@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A bilingual SAA-C03 practice workspace organized by the official AWS exam guide." />
+    <title>SAA Compass</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <a class="brand" href="#" aria-label="SAA Compass home">
+          <span class="brand-mark">S</span>
+          <span><b>SAA</b><small>COMPASS</small></span>
+        </a>
+
+        <nav class="nav-stack">
+          <button class="nav-item active" data-view="dashboard"><span>⌂</span><em data-i18n="dashboard">Dashboard</em></button>
+          <button class="nav-item" data-view="practice"><span>▶</span><em data-i18n="practice">Practice</em></button>
+          <button class="nav-item" data-view="wrong"><span>↻</span><em data-i18n="wrongAnswers">Wrong answers</em><i id="wrong-count">0</i></button>
+          <button class="nav-item" data-view="favorites"><span>☆</span><em data-i18n="favorites">Favorites</em><i id="favorite-count">0</i></button>
+        </nav>
+
+        <section class="exam-card">
+          <span class="eyebrow" data-i18n="examMode">Exam mode</span>
+          <strong>65 <small data-i18n="questions">questions</small></strong>
+          <p data-i18n="examDescription">Official 30 / 26 / 24 / 20 domain weighting.</p>
+          <button id="start-exam" class="button button-dark" data-i18n="startExam">Start exam</button>
+        </section>
+
+        <div class="sidebar-foot">
+          <button id="reset-progress" class="text-button" data-i18n="resetProgress">Reset progress</button>
+          <span>SAA-C03 · V29.35</span>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <span class="eyebrow" data-i18n="studyWorkspace">Study workspace</span>
+            <h1 id="page-title">Dashboard</h1>
+          </div>
+          <div class="topbar-actions">
+            <label class="search-wrap">
+              <span>⌕</span>
+              <input id="search-input" type="search" placeholder="Search questions or services" autocomplete="off" />
+            </label>
+            <div class="language-switch" aria-label="Question language">
+              <button data-lang="en" class="active">EN</button>
+              <button data-lang="ko">한국어</button>
+            </div>
+          </div>
+        </header>
+
+        <section id="dashboard-view" class="view active">
+          <div class="hero-grid">
+            <article class="hero-copy">
+              <span class="status-pill"><i></i><span data-i18n="guideAligned">Guide-aligned question bank</span></span>
+              <h2 data-i18n="heroTitle">Build judgment,<br />not just recall.</h2>
+              <p data-i18n="heroBody">Practice 880 bilingual questions mapped to every SAA-C03 content domain and task.</p>
+              <div class="hero-actions">
+                <button id="continue-study" class="button button-primary" data-i18n="continueStudy">Continue studying</button>
+                <button id="random-set" class="button button-ghost" data-i18n="randomSet">Random 10</button>
+              </div>
+            </article>
+            <article class="progress-orbit" aria-label="Overall progress">
+              <div class="orbit-ring">
+                <div>
+                  <strong id="progress-percent">0%</strong>
+                  <span data-i18n="complete">complete</span>
+                </div>
+              </div>
+              <dl>
+                <div><dt data-i18n="answered">Answered</dt><dd id="answered-stat">0</dd></div>
+                <div><dt data-i18n="correct">Correct</dt><dd id="correct-stat">0</dd></div>
+                <div><dt data-i18n="toReview">To review</dt><dd id="review-stat">0</dd></div>
+              </dl>
+            </article>
+          </div>
+
+          <div class="section-heading">
+            <div><span class="eyebrow" data-i18n="officialBlueprint">Official blueprint</span><h3 data-i18n="domains">Content domains</h3></div>
+            <p data-i18n="blueprintHint">Choose a domain to practice its task-level question set.</p>
+          </div>
+          <div id="domain-grid" class="domain-grid"></div>
+          <section class="distribution-card">
+            <div>
+              <span class="eyebrow" data-i18n="distribution">Exam distribution</span>
+              <h3 data-i18n="weightedPractice">Weighted practice</h3>
+              <p data-i18n="distributionBody">Exam mode draws 65 questions using the official scored-content weighting.</p>
+            </div>
+            <div id="distribution-bars" class="distribution-bars"></div>
+          </section>
+        </section>
+
+        <section id="practice-view" class="view">
+          <div class="practice-toolbar">
+            <div>
+              <span id="session-label" class="eyebrow">All domains</span>
+              <h2 id="session-title">Practice session</h2>
+            </div>
+            <div class="session-progress">
+              <span id="question-position">1 / 10</span>
+              <div><i id="session-progress-bar"></i></div>
+            </div>
+          </div>
+
+          <div class="practice-layout">
+            <article id="question-card" class="question-card">
+              <div class="question-meta">
+                <div><span id="question-domain" class="domain-chip">D1</span><span id="question-task">Task 1.1</span></div>
+                <button id="favorite-button" class="favorite-button" aria-label="Toggle favorite">☆</button>
+              </div>
+              <h3 id="question-text"></h3>
+              <p id="selection-hint" class="selection-hint"></p>
+              <div id="choice-list" class="choice-list"></div>
+              <div id="answer-panel" class="answer-panel" hidden>
+                <div class="answer-result"><span id="result-icon"></span><strong id="result-title"></strong></div>
+                <p id="explanation-text"></p>
+              </div>
+              <div class="question-actions">
+                <button id="previous-question" class="button button-ghost">← <span data-i18n="previous">Previous</span></button>
+                <button id="check-answer" class="button button-primary" disabled data-i18n="checkAnswer">Check answer</button>
+                <button id="next-question" class="button button-dark" hidden><span data-i18n="next">Next</span> →</button>
+              </div>
+            </article>
+
+            <aside class="session-map">
+              <span class="eyebrow" data-i18n="sessionMap">Session map</span>
+              <div id="session-dots" class="session-dots"></div>
+              <div class="map-legend">
+                <span><i class="dot correct"></i><em data-i18n="correct">Correct</em></span>
+                <span><i class="dot wrong"></i><em data-i18n="wrong">Wrong</em></span>
+                <span><i class="dot current"></i><em data-i18n="current">Current</em></span>
+              </div>
+              <button id="exit-session" class="text-button" data-i18n="exitSession">Exit session</button>
+            </aside>
+          </div>
+        </section>
+
+        <section id="empty-view" class="view empty-state">
+          <span class="empty-icon">◇</span>
+          <h2 id="empty-title">Nothing here yet</h2>
+          <p id="empty-copy">Questions you mark will appear here.</p>
+          <button id="empty-action" class="button button-primary" data-i18n="browseQuestions">Browse questions</button>
+        </section>
+      </main>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
